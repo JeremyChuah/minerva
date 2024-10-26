@@ -3,7 +3,7 @@ from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
-# Define scopes for the API
+
 SCOPES = [
     'https://www.googleapis.com/auth/classroom.courses.readonly'
 ]
