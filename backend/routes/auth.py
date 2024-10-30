@@ -1,8 +1,9 @@
-from flask import Blueprint, redirect, session, url_for, request
+from flask import Blueprint, redirect, session, url_for, request, jsonify
 import google.oauth2.credentials
 import google_auth_oauthlib.flow
 import json
 import os
+from .course import fetch_courses
 
 # Define the router for authentication
 auth_router = Blueprint('auth', __name__)
@@ -75,5 +76,6 @@ def oauth2callback():
     # Save the credentials
     credentials = flow.credentials
     save_credentials(credentials)
+    course_info = fetch_courses(credentials)
 
-    return "Logged in successfully!"
+    return jsonify(course_info)
