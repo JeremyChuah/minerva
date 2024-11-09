@@ -15,10 +15,15 @@ SCOPES = [
 
 course_router = Blueprint('courses', __name__)
 
-@course_router.route('/get_courses')
+@course_router.get('/get_courses')
 def test_api_request():
     """Test API call to list Google Classroom courses."""
     credentials = load_credentials()
+
+    data = request.get_json()
+
+    course_id = data.get('course_id')  # Access 'subject'
+    subject = data.get('subject')
 
     if not credentials:
         return redirect(url_for('auth.authorize'))
@@ -31,10 +36,6 @@ def test_api_request():
     # Initialize Drive service
     drive_service = build('drive', 'v3', credentials=credentials)
 
-    # Fetch courses
-    all_courses = fetch_courses(credentials)
-    course_id = all_courses['courses'][1]['id']
-
     # Fetch materials
     materials = fetch_materials(course_id, credentials)
     file_id = materials['courseWorkMaterial'][0]['materials'][0]['driveFile']['driveFile']['id']
@@ -44,7 +45,7 @@ def test_api_request():
     file_name = file_metadata['name']
 
     # Create folder if it doesn't exist
-    download_folder = 'test_folder'
+    download_folder = subject
     if not os.path.exists(download_folder):
         os.makedirs(download_folder)
 
@@ -63,8 +64,6 @@ def download_materials(file_id, service, file_name, folder_path):
         done = False
         while not done:
             status, done = downloader.next_chunk()
-            print(f"Download {int(status.progress() * 100)}%.")
-
     print(f"Downloaded {file_name} to {file_path}")
 
 def fetch_courses(credentials):
