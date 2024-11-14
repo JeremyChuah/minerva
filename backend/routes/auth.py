@@ -51,6 +51,4 @@ def oauth2callback():
     # Save the credentials
     credentials = flow.credentials
     save_credentials(credentials)
-    course_info = fetch_courses(credentials)
-
-    return jsonify(course_info)
+    return redirect('http://localhost:3000/home')
