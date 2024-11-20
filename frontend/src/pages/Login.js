@@ -1,10 +1,9 @@
 import React from 'react';
-import axios from 'axios'
 import { Link } from 'react-router-dom';
-import { LinkIcon } from '@heroicons/react/24/outline'
-
+import { LinkIcon } from '@heroicons/react/24/outline';
 
 function Login() {
+
   return (
     <div className="flex justify-center items-center h-screen bg-gray-100">
       <div className="w-full max-w-md bg-white rounded-lg shadow-lg p-6">
@@ -17,35 +16,9 @@ function Login() {
               className="w-16 h-16"
             />
           </div>
-          <h2 className="text-xl font-semibold mt-4">Username</h2>
-          <p className="text-gray-500 mt-1">School Name</p>
+          <h2 className="text-xl font-semibold mt-4">Jane Smith</h2>
+          <p className="text-gray-500 mt-1">The University of Texas at Austin</p>
         </div>
-
-        {/* Appearance Section */}
-        <div className="mt-6">
-          <div className="flex justify-between items-center bg-gray-200 p-3 rounded-lg">
-            <span>Appearance</span>
-            <span className="text-gray-600">Light →</span>
-          </div>
-        </div>
-
-        {/* Personal Information Section */}
-        <div className="mt-6">
-          <h3 className="text-lg font-semibold mb-2">Personal Information</h3>
-
-          {/* Name */}
-          <div className="flex justify-between items-center bg-gray-200 p-3 rounded-lg mb-3">
-            <span>Name</span>
-            <span className="text-gray-600">Lucas Helms →</span>
-          </div>
-
-          {/* Email */}
-          <div className="flex justify-between items-center bg-gray-200 p-3 rounded-lg">
-            <span>Email</span>
-            <span className="text-gray-600">john.doe@gmail.com →</span>
-          </div>
-        </div>
-
         {/* Connect with Classroom Button */}
         <div className="mt-6">
           <Link

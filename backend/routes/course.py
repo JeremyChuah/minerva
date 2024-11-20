@@ -55,7 +55,6 @@ def test_api_request():
     return "Downloaded"
 
 def download_materials(file_id, service, file_name, folder_path):
-    """Download a file from Google Drive into a specified folder."""
     file_path = os.path.join(folder_path, file_name)
     request = service.files().get_media(fileId=file_id)
 
@@ -66,14 +65,14 @@ def download_materials(file_id, service, file_name, folder_path):
             status, done = downloader.next_chunk()
     print(f"Downloaded {file_name} to {file_path}")
 
-def fetch_courses(credentials):
-    """Fetches Google Classroom courses."""
+@course_router.get('/courses')
+def fetch_courses():
+    credentials = load_credentials()
     service = build("classroom", "v1", credentials=credentials)
     courses = service.courses().list().execute()
     return courses
 
 def fetch_materials(course_id, credentials):
-    """Fetches course materials for a given course."""
     service = build("classroom", "v1", credentials=credentials)
     course_materials = service.courses().courseWorkMaterials().list(courseId=course_id).execute()
     return course_materials

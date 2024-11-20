@@ -1,12 +1,14 @@
 from flask import Flask, redirect, url_for, jsonify
 import secrets
 from googleapiclient.discovery import build
+from flask_cors import CORS
 from routes.auth import auth_router
 from routes.course import course_router
 from routes.ai import ai_router
 
 # Initialize the Flask app
 app = Flask(__name__)
+CORS(app)
 app.secret_key = secrets.token_urlsafe(32)
 
 # Register the auth router
