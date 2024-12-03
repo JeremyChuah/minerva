@@ -1,17 +1,23 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import logo from '../logo.png';
+import { BookOpen } from 'lucide-react';
+import { ClipLoader } from "react-spinners"; // Import spinner
+import { useNavigate } from 'react-router-dom';
 
-const Layout = () => {
+const Home = () => {
+  const navigate = useNavigate();
+
   const [courses, setCourses] = useState(null);
   const [loading, setLoading] = useState(true);
   const [selectedCourse, setSelectedCourse] = useState(null);
+  const [loadingCourseMaterials, setLoadingCourseMaterials] = useState(true);
 
   useEffect(() => {
     const fetchCourses = async () => {
       try {
         const response = await axios.get("http://127.0.0.1:5000/courses/courses");
-        setCourses(response.data);
+        setCourses(response.data.courses);
         setLoading(false);
       } catch (error) {
         console.error("Error fetching courses:", error);
@@ -21,6 +27,20 @@ const Layout = () => {
 
     fetchCourses();
   }, []);
+
+  const handleCourseSelect = async (course) => {
+    try {
+      setSelectedCourse(course);
+      const response = await axios.post("http://127.0.0.1:5000/courses/get_courses", {
+        course_id: course.id,
+        subject: course.name.toLowerCase().replace(/\s/g, '_')
+      }).then(() => {
+        setLoadingCourseMaterials(false);
+      })
+    } catch (error) {
+      console.error("Error fetching course materials:", error);
+    }
+  };
 
   if (loading || !courses) {
     return <div>Loading...</div>;
@@ -38,11 +58,11 @@ const Layout = () => {
 
         <nav className="space-y-6 flex-grow">
           <div className="space-y-2">
-            <h2 className="text-sm font-semibold text-gray-600 uppercase">Subject</h2>
-            {courses.courses.map((course) => (
+            <h2 className="text-sm font-semibold text-gray-600 uppercase">Courses</h2>
+            {courses.map((course) => (
               <div
-                key={course.name}
-                onClick={() => setSelectedCourse(course)}
+                key={course.id}
+                onClick={() => handleCourseSelect(course)}
                 className="flex items-center px-2 py-1 text-gray-700 hover:bg-gray-200 rounded cursor-pointer"
               >
                 <div className={`w-2 h-2 rounded-full ${selectedCourse === course ? 'bg-green-500' : 'bg-red-500'} mr-3`} />
@@ -55,20 +75,30 @@ const Layout = () => {
 
       <div className="flex-1 p-8 flex justify-center items-center">
         {selectedCourse ? (
-          <div className="space-y-4">
-            <h2 className="text-2xl font-bold text-center mb-6">{selectedCourse.name}</h2>
-            <div className="flex gap-4">
-              <button className="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors">
-                Practice Questions
-              </button>
-              <button className="px-6 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors">
-                Review Sheet
-              </button>
-              <button className="px-6 py-3 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition-colors">
-                Chatbot
-              </button>
+          loadingCourseMaterials ? (
+            <div className="flex flex-col items-center">
+              <ClipLoader size={50} color={"#4A90E2"} />
+              <div className="text-xl font-bold text-gray-400 mt-4">Loading course materials...</div>
             </div>
-          </div>
+          ) : (
+            <div className="space-y-4 w-full max-w-md">
+              <h2 className="text-2xl font-bold text-center mb-8">{selectedCourse.name}</h2>
+              <div className="space-y-4">
+                <button
+                  className="w-full flex items-center p-6 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition-all group"
+                  onClick={() => navigate('/practice-questions', { state: {selectedCourse: selectedCourse}})                }
+                >
+                  <div className="w-12 h-12 bg-indigo-50 rounded-lg flex items-center justify-center group-hover:bg-indigo-100 transition-colors">
+                    <BookOpen className="w-6 h-6 text-indigo-600" />
+                  </div>
+                  <div className="ml-4 text-left">
+                    <h3 className="font-semibold text-gray-900">Practice Questions</h3>
+                    <p className="text-sm text-gray-500">Test your knowledge with practice problems</p>
+                  </div>
+                </button>
+              </div>
+            </div>
+          )
         ) : (
           <div className="text-2xl font-bold text-gray-400">
             Select a course
@@ -79,4 +109,4 @@ const Layout = () => {
   );
 };
 
-export default Layout;
+export default Home;

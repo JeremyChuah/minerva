@@ -15,7 +15,7 @@ SCOPES = [
 
 course_router = Blueprint('courses', __name__)
 
-@course_router.get('/get_courses')
+@course_router.post('/get_courses')
 def test_api_request():
     """Test API call to list Google Classroom courses."""
     credentials = load_credentials()
@@ -24,6 +24,8 @@ def test_api_request():
 
     course_id = data.get('course_id')  # Access 'subject'
     subject = data.get('subject')
+
+    print(course_id, subject)
 
     if not credentials:
         return redirect(url_for('auth.authorize'))
@@ -38,19 +40,21 @@ def test_api_request():
 
     # Fetch materials
     materials = fetch_materials(course_id, credentials)
-    file_id = materials['courseWorkMaterial'][0]['materials'][0]['driveFile']['driveFile']['id']
 
-    # Fetch file metadata for name
-    file_metadata = drive_service.files().get(fileId=file_id, fields="name, mimeType").execute()
-    file_name = file_metadata['name']
+    for i in range(len(materials['courseWorkMaterial'])):
+        file_id = materials['courseWorkMaterial'][i]['materials'][0]['driveFile']['driveFile']['id']
 
-    # Create folder if it doesn't exist
-    download_folder = subject
-    if not os.path.exists(download_folder):
-        os.makedirs(download_folder)
+        # Fetch file metadata for name
+        file_metadata = drive_service.files().get(fileId=file_id, fields="name, mimeType").execute()
+        file_name = file_metadata['name']
 
-    # Download materials
-    download_materials(file_id, drive_service, file_name, download_folder)
+        # Create folder if it doesn't exist
+        download_folder = subject
+        if not os.path.exists(download_folder):
+            os.makedirs(download_folder)
+
+        # Download materials
+        download_materials(file_id, drive_service, file_name, download_folder)
 
     return "Downloaded"
 

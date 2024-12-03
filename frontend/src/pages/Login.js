@@ -7,7 +7,6 @@ function Login() {
   return (
     <div className="flex justify-center items-center h-screen bg-gray-100">
       <div className="w-full max-w-md bg-white rounded-lg shadow-lg p-6">
-        {/* Profile Picture */}
         <div className="flex flex-col items-center">
           <div className="w-24 h-24 bg-gray-300 rounded-full flex items-center justify-center">
             <img
@@ -19,7 +18,6 @@ function Login() {
           <h2 className="text-xl font-semibold mt-4">Jane Smith</h2>
           <p className="text-gray-500 mt-1">The University of Texas at Austin</p>
         </div>
-        {/* Connect with Classroom Button */}
         <div className="mt-6">
           <Link
             to={'http://127.0.0.1:5000/auth/authorize'}

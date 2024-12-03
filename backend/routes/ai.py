@@ -6,6 +6,7 @@ from typing import List
 from flask import Blueprint, request, jsonify
 import os.path
 import json
+from llama_index.core import VectorStoreIndex, SimpleDirectoryReader
 
 class PracticeQuestion(BaseModel):
     questions: List[List[str]] = Field(
@@ -22,7 +23,7 @@ class PracticeQuestion(BaseModel):
 
 ai_router = Blueprint('ai', __name__)
 
-@ai_router.get('/practice_questions')
+@ai_router.post('/practice_questions')
 def generate_practice_questions():
     data = request.get_json()
     
@@ -30,12 +31,15 @@ def generate_practice_questions():
     storage_path = data.get("storage_path")
     query = data.get("query")
 
+    print(query)
+
     if not os.path.exists(storage_path):
         create_db(subject, storage_path)
     db = load_db(storage_path)
 
     # Create the query engine with a structured prompt
     query_engine = db.as_query_engine()
+
     
     # Modify the query to request the specific format we want
     structured_query = f"""
@@ -50,7 +54,7 @@ def generate_practice_questions():
         "correct_answers": [0, 1]
     }}
     
-    Each question should have exactly 4 answer choices. The correct_answers array should contain the index (0-3) of the correct answer for each question.
+    Each question should have exactly 4 answer choices. The correct_answers array should contain the index (0-3) of the correct answer for each question. Make the correct choices vary dont always do the correct one in say index 0
     """
 
     try:
