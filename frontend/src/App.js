@@ -3,6 +3,8 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Login from './pages/Login';
 import Home from './pages/Home';
 import Questions from './pages/Questions';
+import LandingPage from './pages/LandingPage';
+import Chatbot from './pages/Chatbot';
 
 function App() {
   return (
@@ -11,9 +13,10 @@ function App() {
 
         {/* Define Routes */}
         <Routes>
-          <Route path="/" element={<Login />} />
+          <Route path="/" element={<LandingPage/>}/>
           <Route path="/home" element={<Home />} />
           <Route path="/practice-questions" element={<Questions />} />
+          <Route path="/chatbot" element={<Chatbot />} />
         </Routes>
       </div>
     </Router>
