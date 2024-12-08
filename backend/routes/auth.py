@@ -19,6 +19,10 @@ SCOPES = [
     'https://www.googleapis.com/auth/drive.readonly'
 ]
 
+@auth_router.route('/test')
+def test():
+    return "here"
+
 @auth_router.route('/authorize')
 def authorize():
     """Start the OAuth authorization flow."""
