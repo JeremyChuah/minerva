@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import logo from '../logo.png';
-import { BookOpen, MessageCircle } from 'lucide-react';
+import { BookOpen, MessageCircle, FileQuestion } from 'lucide-react';
 import { ClipLoader } from "react-spinners"; // Import spinner
 import { useNavigate } from 'react-router-dom';
 
@@ -89,7 +89,7 @@ const Home = () => {
                   onClick={() => navigate('/practice-questions', { state: {selectedCourse: selectedCourse}})                }
                 >
                   <div className="w-12 h-12 bg-indigo-50 rounded-lg flex items-center justify-center group-hover:bg-indigo-100 transition-colors">
-                    <BookOpen className="w-6 h-6 text-indigo-600" />
+                    <FileQuestion className="w-6 h-6 text-indigo-600" />
                   </div>
                   <div className="ml-4 text-left">
                     <h3 className="font-semibold text-gray-900">Practice Questions</h3>
@@ -105,7 +105,19 @@ const Home = () => {
                   </div>
                   <div className="ml-4 text-left">
                     <h3 className="font-semibold text-gray-900">Chatbot</h3>
-                    <p className="text-sm text-gray-500">Learn through an interactive Chatbot!</p>
+                    <p className="text-sm text-gray-500">Learn through an interactive Chatbot</p>
+                  </div>
+                </button>
+                <button
+                  className="w-full flex items-center p-6 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition-all group"
+                  onClick={() => navigate('/review', { state: {selectedCourse: selectedCourse}})                }
+                >
+                  <div className="w-12 h-12 bg-indigo-50 rounded-lg flex items-center justify-center group-hover:bg-indigo-100 transition-colors">
+                    <BookOpen className="w-6 h-6 text-indigo-600" />
+                  </div>
+                  <div className="ml-4 text-left">
+                    <h3 className="font-semibold text-gray-900">Review</h3>
+                    <p className="text-sm text-gray-500">Learn through a customized review</p>
                   </div>
                 </button>
               </div>

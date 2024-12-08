@@ -25,7 +25,8 @@ def test_api_request():
     course_id = data.get('course_id')  # Access 'subject'
     subject = data.get('subject')
 
-    print(course_id, subject)
+    if os.path.exists(subject):
+        return "alr downloaded"
 
     if not credentials:
         return redirect(url_for('auth.authorize'))

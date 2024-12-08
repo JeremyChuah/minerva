@@ -1,14 +1,19 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import axios from 'axios';
-import { Send, ArrowLeft } from 'lucide-react';
+import { Send, Home } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import logo from '../logo.png';
 
 const Chatbot = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const [messages, setMessages] = useState([]);
+  const [messages, setMessages] = useState([
+    { 
+      role: 'assistant', 
+      content: "Hi! I'm Minerva your learning assistant, ask me some questions!"
+    }
+  ]);
   const [inputMessage, setInputMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef(null);
@@ -77,11 +82,11 @@ const Chatbot = () => {
     <div className="flex flex-col h-screen bg-white">
       {/* Header */}
       <div className="bg-white shadow-sm px-6 py-4 flex items-center">
-        <button 
-          onClick={() => navigate('/')}
-          className="p-2 hover:bg-gray-100 rounded-full"
+        <button
+          onClick={() => navigate('/home')}
+          className="left-4 bg-gray-200 p-2 rounded-full shadow-md hover:bg-gray-300 transition-colors"
         >
-          <ArrowLeft className="w-5 h-5" />
+          <Home size={24} />
         </button>
         <h1 className="text-xl font-semibold ml-4">{selectedCourse?.name} Assistant</h1>
       </div>

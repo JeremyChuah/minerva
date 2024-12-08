@@ -113,14 +113,6 @@ def chatbot():
         response: ChatResponseGen = chat_engine.chat(message)
         response_message = str(response.response)
         
-        # Get chat history
-        chat_history = [
-            {
-                "role": msg.role,
-                "content": msg.content
-            }
-            for msg in chat_memory.get()
-        ]
         
         return jsonify({
             "response": response_message,
@@ -130,4 +122,72 @@ def chatbot():
         return jsonify({
             "error": str(e),
             "message": "Error processing chat message"
+        }), 500
+
+@ai_router.post('/generate_review')
+def generate_review():
+    data = request.get_json()
+    subject = data.get("subject")
+    storage_path = data.get("storage_path")
+    query = data.get("query")
+
+    if not os.path.exists(storage_path):
+        return jsonify({"error": "Storage path does not exist"}), 400
+
+    try:
+        db = load_db(storage_path)
+        query_engine = db.as_query_engine()
+
+        # Structure the review page query
+        review_structure_prompt = f"""
+        Create comprehensive notes about "{query}" for {subject}. Structure the response in this exact JSON format:
+        {{
+            "title": "{query}",
+            "introduction": "Brief introduction to this topic",
+            "sections": [
+                {{
+                    "title": "Section title",
+                    "content": "Main content text",
+                    "key_points": ["Important point 1", "Important point 2", "Important point 3"],
+                    "table": {{
+                        "headers": ["Column 1", "Column 2", "Column 3"],
+                        "rows": [
+                            ["Data 1", "Data 2", "Data 3"],
+                            ["Data 4", "Data 5", "Data 6"]
+                        ]
+                    }}
+                }}
+            ],
+            "summary": "Brief summary of key takeaways"
+        }}
+
+        Focus specifically on {query} and make sure to:
+        1. Include relevant sections about this specific topic
+        2. Provide key points that directly relate to {query}
+        3. Include tables only if they help explain {query}
+        4. Keep content clear and focused on this topic
+        """
+
+        # Get the structured review content
+        response = query_engine.query(review_structure_prompt)
+        
+        # Parse the response to get the JSON structure
+        response_text = str(response)
+        json_start = response_text.find('{')
+        json_end = response_text.rfind('}') + 1
+        
+        if json_start != -1 and json_end != -1:
+            json_str = response_text[json_start:json_end]
+            structured_output = json.loads(json_str)
+            return jsonify(structured_output)
+        else:
+            return jsonify({
+                "error": "Could not parse review structure",
+                "raw_response": str(response)
+            }), 400
+
+    except Exception as e:
+        return jsonify({
+            "error": str(e),
+            "message": "Error generating review"
         }), 500

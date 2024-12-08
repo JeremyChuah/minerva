@@ -5,6 +5,7 @@ import Home from './pages/Home';
 import Questions from './pages/Questions';
 import LandingPage from './pages/LandingPage';
 import Chatbot from './pages/Chatbot';
+import Review from './pages/Review';
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
           <Route path="/" element={<LandingPage/>}/>
           <Route path="/home" element={<Home />} />
           <Route path="/practice-questions" element={<Questions />} />
+          <Route path="/review" element={<Review />} />
           <Route path="/chatbot" element={<Chatbot />} />
         </Routes>
       </div>
